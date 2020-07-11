@@ -1,0 +1,44 @@
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/ocupload/jquery.ocupload-1.1.2.js"></script>
+<!--使用jquery ocupload下载引入jquery.ocupload-1.1.2.js实现一键上传的功能-->
+<!--
+1.必须是同步提交form表单
+2.form表单的提交方式必须是multipart/form-data
+3.提交方式必须为post
+4.上传文件对应input type=“file” 元素要提供name属性
+-->
+<!--无返回值-->
+<form action="/test/upLoadExcle" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadfile">
+    <br/>
+    <br/>
+    <input type="submit" value="无返回值文件上传">
+</form>
+
+<!--有返回值-->
+<form id="import" enctype="multipart/form-data">
+    <input type="file" name="uploadfile">
+    <br/>
+    <br/>
+    <input type="button" value="有返回值文件上传" onclick="importFile()">
+</form>
+
+<script>
+    //有返回值文件导入
+    //action="/test/upLoadExcle" method="post"
+    function importFile() {
+        var formData=new FormData($('#import')[0]);
+        $.ajax({
+            type: "POST",
+            data: formData,
+            async: false,
+            contentType: false,  //默认是true application/x-www-form-urlencoded 这里是自己已经设置成multipart/form-data
+            processData: false,  //文件不需要转换序列化
+            url: "http://127.0.0.1:8081/test/upLoadExcleParm",
+            success: function(data) {
+                alert(data.msg);
+            }
+        });
+    }
+
+</script>

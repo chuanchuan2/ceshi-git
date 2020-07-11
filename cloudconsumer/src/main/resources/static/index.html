@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" content-type="text/javascript"/>-->
+    <title>首页</title>
+    <script type="text/javascript" src="../js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/RSA/RSA.js"></script>
+    <script type="text/javascript" src="../js/RSA/Barrett.js"></script>
+    <script type="text/javascript" src="../js/RSA/BigInt.js"></script>
+    <script type="text/javascript" src="../js/common/common.js"></script>
+</head>
+
+
+<body>
+<!--<input id="PageContext" value="${request.getContextPath()}"/>-->
+<div>
+<form action="/test/upload" method="post">
+    用户名:<input type="text" name="username2">
+    密码:<input type="password" name="password2">
+    <input type="submit" value="提交">
+</form>
+</div>
+
+<div>
+<form id="login-form" action="./test/loginuser" method="post">
+    用户名:<input id="username" type="text" name="username">
+    密码:<input id="password" type="password" name="password">
+    <input type="button" value="RSA用户增加测试" onclick="login()">
+    <input id="password2" type="text" name="password2">
+</form>
+</div>
+
+<div>
+    <form id="login-formadd" action="../test/encodelogin" method="post">
+        用户名:<input id="usernameadd" type="text" name="usernameadd">
+        密码:<input id="passwordadd" type="password" name="passwordadd">
+        <input type="button" value="RSA登录测试" onclick="loginsuccess()">
+        <input id="passwordadd2" type="text" name="passwordadd2">
+    </form>
+</div>
+</body>
+<script>
+
+    //新增将密码进行加密操作保存数据库
+    function login(){
+        var encrypPassWord;
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        setMaxDigits(130);
+        $.ajax({
+            type: "GET",
+            /*data: {username:username,password:password},*/
+            async: false,
+            url: "./test/loginKeyPair",
+            success: function (data) {
+                /**公钥模量*/
+                var modulus = data.modulus;
+                /** 公钥指数 */
+                var empoent = data.exponent;
+                var key = new RSAKeyPair(empoent, "", modulus);
+                //alert("页面合成公钥为"+JSON.stringify(key));
+                //将密码进行加密
+                encrypPassWord = encryptedString(key, password);
+                //alert("加密后密码为：" + encrypPassWord);
+                document.getElementById("password2").value=encrypPassWord;
+                $('#login-form').submit();
+            }
+        });
+    }
+
+    //登录将密码进行加密操作传递后台进行解密验证
+    function loginsuccess(){
+        var encrypPassWord;
+        var username = document.getElementById("usernameadd").value;
+        var password = document.getElementById("passwordadd").value;
+        alert(password);
+        alert(username);
+        setMaxDigits(130);
+        $.ajax({
+            type: "GET",
+            /*data: {username:username,password:password},*/
+            async: false,
+            url: "../test/loginKeyPair",
+            success: function (data) {
+                /**公钥模量*/
+                var modulus = data.modulus;
+                /** 公钥指数 */
+                var empoent = data.exponent;
+                var key = new RSAKeyPair(empoent, "", modulus);
+                //alert("页面合成公钥为"+JSON.stringify(key));
+                //将密码进行加密
+                encrypPassWord = encryptedString(key, password);
+                //alert("加密后密码为：" + encrypPassWord);
+                document.getElementById("passwordadd2").value=encrypPassWord;
+                $('#login-formadd').submit();
+            }
+        });
+    }
+
+
+</script>
+</html>

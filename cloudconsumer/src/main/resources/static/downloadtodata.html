@@ -1,0 +1,24 @@
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<input type="button" value="返回实体类测试" onclick="returnpojo()" />
+<input type="button" value="下载模板测试" onclick="upload()" />
+
+<script>
+    //返回实体类测试
+    function returnpojo() {
+        $.ajax({
+            type: "POST",
+            data: "name=John&location=Boston",
+            dataType: "JSON",
+            async: false,
+            url: "http://127.0.0.1:8081/test/returnpojo",
+            success: function(data) {
+                alert(data.name+"："+ data.age+"岁");
+        }
+    });
+    }
+
+    //下载测试
+    function upload() {
+        location.href="http://127.0.0.1:8081/test/uploadExcle";
+    }
+</script>

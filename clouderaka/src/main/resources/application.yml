@@ -1,0 +1,11 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: ly-clouderaka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8083/eureka
+    register-with-eureka: false
+    fetch-registry: false

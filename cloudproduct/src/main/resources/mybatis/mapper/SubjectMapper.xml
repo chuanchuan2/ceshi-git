@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.product.dao.SubjectMapper">
+    <resultMap id="BaseResultMap" type="com.cloud.product.pojo.Subject">
+        <id column="SUBJECT_ID" property="subjectId" jdbcType="INTEGER"/>
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    SUBJECT_ID, SUBJECT_NAME
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from subject
+        where SUBJECT_ID = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from subject
+    where SUBJECT_ID = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.cloud.product.pojo.Subject">
+    insert into subject (SUBJECT_ID, SUBJECT_NAME)
+    values (#{subjectId,jdbcType=INTEGER}, #{subjectName,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.cloud.product.pojo.Subject">
+        insert into subject
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subjectId != null">
+                SUBJECT_ID,
+            </if>
+            <if test="subjectName != null">
+                SUBJECT_NAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subjectId != null">
+                #{subjectId,jdbcType=INTEGER},
+            </if>
+            <if test="subjectName != null">
+                #{subjectName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cloud.product.pojo.Subject">
+        update subject
+        <set>
+            <if test="subjectName != null">
+                SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SUBJECT_ID = #{subjectId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cloud.product.pojo.Subject">
+    update subject
+    set SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR}
+    where SUBJECT_ID = #{subjectId,jdbcType=INTEGER}
+  </update>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from subject
+    </select>
+</mapper>

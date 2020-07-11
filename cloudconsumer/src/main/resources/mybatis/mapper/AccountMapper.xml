@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.consumer.dao.AccountMapper" >
+  <resultMap id="BaseResultMap" type="com.cloud.consumer.pojo.Account" >
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    userid, money, version
+  </sql>
+
+  <insert id="insert" parameterType="com.cloud.consumer.pojo.Account" >
+    insert into account (userid, money, version)
+    values (#{userid,jdbcType=VARCHAR}, #{money,jdbcType=DECIMAL}, #{version,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cloud.consumer.pojo.Account" >
+    insert into account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!--查询账户余额实体信息-->
+  <select id="findBalanceObject" parameterType="String" resultType="com.cloud.consumer.pojo.Account">
+    select
+    <include refid="Base_Column_List"/>
+    from account where userid=#{userid,jdbcType=VARCHAR}
+  </select>
+
+  <!--查询余额-->
+  <select id="findBalance" parameterType="String" resultType="DECIMAL">
+    select money from account where userid=#{userid,jdbcType=VARCHAR}
+  </select>
+
+  <!--悲观锁修改金额-->
+  <update id="updateBanlance">
+    update account set money = #{totalAmount,jdbcType=DECIMAL} where userid = #{userId,jdbcType=VARCHAR}
+  </update>
+
+  <!--行级锁修改金额-->
+  <update id="updateBanlanceBase">
+    update account set money = money-#{amount,jdbcType=DECIMAL} where userid = #{userId,jdbcType=VARCHAR} and money >= #{amount,jdbcType=DECIMAL}
+  </update>
+
+  <!--<update id="updateBanlanceBaseadd">
+    update account set money = money+#{amount,jdbcType=DECIMAL} where userid = #{userId,jdbcType=VARCHAR} and money+#{amount,jdbcType=DECIMAL} >=money
+  </update>-->
+
+  <!--行级锁修改金额-->
+  <update id="updateBanlanceTwo">
+    update account set money = #{subtract,jdbcType=DECIMAL},version=#{version,jdbcType=INTEGER}+1 where userid = #{userId,jdbcType=VARCHAR} and version=#{version,jdbcType=INTEGER}
+  </update>
+
+</mapper>

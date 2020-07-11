@@ -1,0 +1,28 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: ly-cloudproduct
+  datasource:
+    ds0:
+      url: jdbc:mysql://localhost:3307/yun?serverTimezone=UTC
+      username: root
+      password: 1234
+      hikari:
+        maximum-pool-size: 30
+        minimum-idle: 10
+    type: com.alibaba.druid.pool.DruidDataSource
+  main:
+    allow-bean-definition-overriding: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8083/eureka
+
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml #指定mappper.xml的路径
+
+#设置日志级别
+logging:
+  level:
+    com.cloud.product: debug
