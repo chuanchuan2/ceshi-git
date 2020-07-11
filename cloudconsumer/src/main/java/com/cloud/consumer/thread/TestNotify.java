@@ -16,6 +16,7 @@ public class TestNotify implements Runnable {
             System.out.println("开始下载图片");
             if(num>0){
                 num=num-10;
+                System.out.println("safds");
                 System.out.println("正在下载图片" +num+ "%," + Thread.currentThread().getName());
                 try {
                     num.wait();
